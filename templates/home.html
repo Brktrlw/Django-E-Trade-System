@@ -1,0 +1,41 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+{% block content %}
+    <section class="section-intro padding-y-sm">
+        <div class="container">
+            {% include 'includes/alerts.html' %}
+            <div class="intro-banner-wrap">
+                <img src="{% static 'images/banners/1.jpg' %}" class="img-fluid rounded">
+            </div>
+        </div>
+    </section>
+    <section class="section-name padding-y-sm">
+        <div class="container">
+            <header class="section-heading">
+                <a href="{% url 'url_store' %}" class="btn btn-outline-primary float-right">Hepsini Gör</a>
+                <h3 class="section-title">Popüler Ürünler</h3>
+            </header>
+
+            <div class="row">
+
+
+                {# PRODUCT START #}
+                {% for product in populer_products %}
+                    <div class="col-md-3">
+                        <div class="card card-product-grid">
+                            <a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"></a>
+                            <figcaption class="info-wrap">
+                                <a href="" class="title">{{ product.product_name }}</a>
+                                <div class="price mt-1">${{ product.price }}</div>
+                            </figcaption>
+                        </div>
+                    </div>
+                {% endfor %}
+                {# PRODUCT END #}
+
+            </div>
+        </div>
+    </section>
+    </body>
+    </html>
+{% endblock content %}

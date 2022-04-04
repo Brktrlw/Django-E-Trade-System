@@ -1,0 +1,10 @@
+<aside class="col-md-3">
+    <ul class="list-group">
+        <a class="list-group-item {% if '/user/profile/' == request.path %}active{% endif %}" href="{% url 'url_profile' %}"> Profil </a>
+        <a class="list-group-item {% if '/user/my-orders/' == request.path %}active{% endif %}" href="{% url 'url_myOrders' %}"> Siparişlerim </a>
+        <a class="list-group-item {% if '/user/edit-profile/' == request.path %}active{% endif %}" href="{% url 'url_editProfile' %}"> Profili Düzenle </a>
+        <a class="list-group-item {% if '/user/change-password/' == request.path %}active{% endif %}" href="{% url 'url_changePassword' %}"> Parola Güncelle </a>
+    </ul>
+    <br>
+    <a class="btn btn-light btn-block" href="{% url 'url_logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Çıkış Yap</span> </a>
+</aside>

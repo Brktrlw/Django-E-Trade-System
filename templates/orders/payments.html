@@ -1,0 +1,141 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+{% block content %}
+    <section class="section-content padding-y bg">
+        <div class="container">
+            <div class="row">
+                <aside class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 mt-0">Fatura Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text mb-0">{{ order.get_fullname|title }}</p>
+                            <p class="card-text mb-0">{{ order.get_full_address|title }}</p>
+                            <p class="card-text mb-0">{{ order.email|lower }}</p>
+                            <p class="card-text mb-0">{{ order.phone }}</p>
+                            {% if order.order_note %}
+                                <b>Sipariş Notu: </b> {{ order.order_note|title }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 mt-0">Ödeme Yöntemleri</h5>
+                        </div>
+                        <div class="card-body">
+                            <form class="card-details" action="{% url 'url_payment' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ order.order_number }}" name="order_number">
+                                <div class="form-group">
+                                    <p class="text-warning mt-1 mb-0">Kart Üstündeki İsim</p>
+                                    <input type="text" name="card_name" class="form-control" placeholder="Name"
+                                           size="17">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <p class="text-warning">Kart Numarası</p>
+                                    <input type="text" name="card_number" class="form-control mb-3"
+                                           placeholder="1234 5678 9012 3457" size="17" id="cno" minlength="19"
+                                           maxlength="19">
+                                </div>
+                                <div class="form-group pt-2">
+                                    <div class="row d-flex">
+                                        <div class="col-sm-4">
+                                            <p class="text-warning mb-0 mt-0">Tarih</p>
+                                            <input class="form-control" type="text" name="card_exp"
+                                                   placeholder="MM/YYYY" size="7" id="exp" minlength="7" maxlength="7">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <p class="text-warning mb-0">Cvv</p>
+                                            <input type="password" class="form-control" name="card_cvv"
+                                                   placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3"
+                                                   maxlength="3">
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Ürün Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless table-shopping-cart">
+                                <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                    <th scope="col">Ürün</th>
+                                    <th scope="col">Adet</th>
+                                    <th scope="col" style="width: 100px">Fiyat</th>
+                                    <th scope="col" class="text-right"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {# START PRODUCT #}
+                                {% for cart_item in cart_items %}
+                                    <tr>
+                                        <td>
+                                            <figure class="itemside align-items-center">
+                                                <div class="aside"><img src="{{ cart_item.product.images.url }}"
+                                                                        class="img-sm"></div>
+                                                <figcaption class="info">
+                                                    <a href="{% url 'url_productDetail' cart_item.product.category.slug cart_item.product.slug %}"
+                                                       class="title text-dark">{{ cart_item.product.product_name|title }}</a>
+                                                    <p class="text-muted small">
+                                                        {% if cart_item.variations.all %}
+                                                            {% for variation in cart_item.variations.all %}
+                                                                {{ variation.variation_category|title }} :
+                                                                {{ variation.variation_value|title }}
+                                                                <br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </p>
+                                                </figcaption>
+                                            </figure>
+                                        </td>
+                                        <td>
+                                            <label for="">{{ cart_item.quantity }}</label>
+                                        </td>
+                                        <td>
+                                            <div class="">
+                                                <var class="price">₺ {{ cart_item.get_sub_total }}</var>
+                                                <small class="text-muted">Adet: ₺{{ cart_item.product.price }} </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {# END PRODUCT #}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </aside>
+                <aside class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <dl class="dlist-align">
+                                <dt>Toplam Viyat:</dt>
+                                <dd class="text-right"> ₺ {{ total }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Vergi :</dt>
+                                <dd class="text-right"> ₺ {{ tax }}</dd>
+                            </dl>
+                            <dl class="dlist-align">
+                                <dt>Genel Toplam:</dt>
+                                <dd class="text-right text-dark b"><strong> ₺ {{ grand_total }}</strong></dd>
+                            </dl>
+                            <hr>
+                            <p class="text-center mb-3">
+                                <img src="{% static 'images/misc/payments.png' %}" height="26">
+                            </p>
+                            <button type="submit" class="btn btn-primary btn-block"> Ödeme Yap</button>
+                        </div>
+                        </form>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+    Merhaba {{ user.first_name }},
+
+Hesabınızı Aktifleştirmek için lütfen mail adresinizi linke tıklayarak onaylayın.
+    http://{{ domain }}{% url 'url_activate' uidb64=uid token=token %}
+
+{% endautoescape %}

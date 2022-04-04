@@ -1,0 +1,53 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <section class="section-conten padding-y bg">
+        {% include 'includes/alerts.html' %}
+        <div class="container">
+            <div class="row">
+                {% include 'includes/dashboard_sidebar.html' %}
+                <main class="col-md-9">
+                    <article class="card">
+                        <header class="card-header">
+                            <strong class="d-inline-block mr-1">Siparişleriniz</strong>
+                        </header>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Sipariş Kodu</th>
+                                            <th scope="col">First</th>
+                                            <th scope="col">Sipariş Tutarı</th>
+                                            <th scope="col">Sipariş Tarihi</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for order in orders %}
+                                            <tr>
+                                                <th scope="row"><a href="{% url 'url_orderDetail' order.order_number %}"
+                                                                   style="color: black">{{ order.order_number }}</a>
+                                                </th>
+                                                <td>{{ order.first_name|title }} </td>
+                                                <td>₺ {{ order.order_total }}</td>
+                                                <td>{{ order.created_date|date }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </main>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
+
+
+

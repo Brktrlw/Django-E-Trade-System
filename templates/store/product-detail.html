@@ -1,0 +1,142 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+{% block content %}
+    <section class="section-content padding-y bg">
+        <div class="container">
+            <div class="card">
+                <div class="row no-gutters">
+                    <aside class="col-md-6">
+                        <article class="gallery-wrap">
+                            <div class="img-big-wrap mainImage">
+                                <img src="{{ product.images.url }}">
+                            </div>
+                        </article>
+                        <ul class="thumb">
+                            <li>{% for pict in product.product_images.all %}
+                                 <a href="{{ pict.image.url }}" target="mainImage"><img src="{{ pict.image.url }}"></a>
+                            {% endfor %}
+                            </li>
+                        </ul>
+                    </aside>
+
+                    <main class="col-md-6 border-left">
+                        <form action="{% url 'url_addToCart' product.slug %}" method="POST">
+                            {% csrf_token %}
+                            <article class="content-body">
+                                <h2 class="title">{{ product.product_name|title }}</h2>
+                                <div class="rating-star">
+                     <span style="color: #ffb503">
+                     <i class="fa fa-star{% if product.average_review < 0.5 %}-o{% elif product.average_review >= 0.5 and product.average_review < 1 %}-half-o {% endif %}"
+                        aria-hidden="true"></i>
+                     <i class="fa fa-star{% if product.average_review < 1.5 %}-o{% elif product.average_review >= 1.5 and product.average_review < 2 %}-half-o {% endif %}"
+                        aria-hidden="true"></i>
+                     <i class="fa fa-star{% if product.average_review < 2.5 %}-o{% elif product.average_review >= 2.5 and product.average_review < 3 %}-half-o {% endif %}"
+                        aria-hidden="true"></i>
+                     <i class="fa fa-star{% if product.average_review < 3.5 %}-o{% elif product.average_review >= 3.5 and product.average_review < 4 %}-half-o {% endif %}"
+                        aria-hidden="true"></i>
+                     <i class="fa fa-star{% if product.average_review < 4.5 %}-o{% elif product.average_review >= 4.5 and product.average_review < 5 %}-half-o {% endif %}"
+                        aria-hidden="true"></i>
+                     </span>{{ product.average_review }} Puan
+                                    <div class="mb-3"><br>
+                                        <var class="price h4">₺ {{ product.price }}</var>
+                                    </div>
+                                    <p>{{ product.description|capfirst }}</p>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="item-option-select">
+                                            <h6>Renk Seçenekleri</h6>
+                                            <select name="color" class="form-control" required>
+                                                {% for variation_ in product.variations.colors %}
+                                                    <option value="{{ variation_.variation_value | lower }}">{{ variation_.variation_value|title }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="item-option-select">
+                                            <h6>Select Size</h6>
+                                            <select name="size" class="form-control">
+                                                {% for variation_ in product.variations.sizes %}
+                                                    <option value="{{ variation_.variation_value|lower }}">{{ variation_.variation_value|capfirst }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    {% if product.stock <= 0 %}
+                                        <h5 class="text-danger">Stok Kalmadı</h5>
+                                    {% else %}
+                                        <button type="submit" class="btn  btn-outline-success"><span class="text">Sepete Ekle</span>
+                                            <i class="fas fa-shopping-cart"></i></button>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        </form>
+                    </main>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-9">
+                    <header class="section-heading">
+                        <h3>Customer Reviews </h3>
+                    </header>
+                    {% if user.is_authenticated %}
+                        {% if isOrder %}
+                            <form action="{% url 'url_createReview' %}" method="POST">
+                                {% csrf_token %}
+                                <h5>Yorum Yap</h5>
+                                <div>
+                                    <input type="hidden" value="{{ product.id }}" name="product">
+                                    <div class="rate">
+                                        <input type="radio" name="rating" id="rating10" value="5"><label for="rating10"
+                                                                                                         title="5"></label>
+                                        <input type="radio" name="rating" id="rating8" value="4"><label for="rating8"
+                                                                                                        title="4"></label>
+                                        <input type="radio" name="rating" id="rating6" value="3"><label for="rating6"
+                                                                                                        title="3"></label>
+                                        <input type="radio" name="rating" id="rating4" value="2"><label for="rating4"
+                                                                                                        title="2"></label>
+                                        <input type="radio" name="rating" id="rating2" value="1"><label for="rating2"
+                                                                                                        title="1"></label>
+                                    </div>
+                                    <br>
+                                    Başlık:
+                                    <input type="text" class="form-control mb-3" name="subject">
+                                    İçerik:
+                                    <textarea rows="4" cols="80" class="form-control" name="review"></textarea>
+                                    <button class="btn btn-outline-success mb-3 mt-3" type="submit">Gönder</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <h5 class="text-gray text-left mt-4 mb-4">Ürüne yorum yapabilmek için satın
+                                almalısınız.</h5>
+                        {% endif %}
+                    {% else %}
+                        <h5 class="text-gray text-left mt-4 mb-4">Yorum yapmak için giriş yapmalısınız.</h5>
+                        <a class="text-primary" href="{% url 'url_login' %}">Giriş Yap</a>
+                    {% endif %}
+                    {% include 'includes/alerts.html' %}
+                    {% for review in reviews %}
+                        <article class="box mb-3">
+                            <div class="icontext w-100">
+                                <img src="{% static './images/avatars/avatar1.jpg' %}"
+                                     class="img-xs icon rounded-circle">
+                                <div class="text">
+                                    <span class="date text-muted float-md-right">{{ review.created_date }} </span>
+                                    <h6 class="mb-1">{{ review.user|title }} </h6>
+                                    {{ review.subject|title }}<br>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <p>
+                                    {{ review.review }}
+                                </p>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

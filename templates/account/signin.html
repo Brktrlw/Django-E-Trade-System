@@ -1,0 +1,47 @@
+{% extends 'includes/base.html' %}
+
+
+{% block content %}
+
+    <section class="section-conten padding-y" style="min-height:84vh">
+        {% if request.GET.command == 'verification' %}
+            <div class="container mx-auto alert alert-info text-center" role="alert"
+                 style="max-width: 1024px;margin-top: 100px">
+                Hesabınızı aktifleştirmek için mail adresinize ({{ request.GET.email }}) gönderilen onay linki ile
+                hesabınızı onaylayın.
+                <br><br>
+                Zaten Onayladınız mı?
+                <a href="{% url 'url_login' %}">Giriş Yap</a>
+            </div>
+        {% else %}
+            <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+                <div class="card-body">
+                    {% include 'includes/alerts.html' %}
+                    <h4 class="card-title mb-4">Giriş Yap</h4>
+                    <form action="{% url 'url_login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Email Addresi">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control" placeholder="Parola">
+                        </div>
+                        <div class="form-group">
+                            <a href="{% url 'url_forgotPassword' %}" class="float-right">Şifreni mi Unuttun?</a>
+
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block"> Giriş Yap</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <p class="text-center mt-4">Hesabın Yok mu? <a href="{% url 'url_register' %}">Kayıt Ol</a></p>
+            <br><br>
+
+        {% endif %}
+    </section>
+
+{% endblock content %}
+
