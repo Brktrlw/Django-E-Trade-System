@@ -103,7 +103,6 @@ class AddToCartView(View):
             for item in self.variations:
                 cart_item.variations.add(item)
             cart_item.save()
-
             self.variations.clear()
 
     def create_cart_item(self):

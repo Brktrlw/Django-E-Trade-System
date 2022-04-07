@@ -20,11 +20,9 @@ from django.contrib.auth import logout
 from .models import UserModel, UserProfileModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-
 class EditProfileView(LoginRequiredMixin,FormView):
     template_name = "account/edit_profile.html"
     form_class = UserProfileForm
-
 
     def form_valid(self, form):
         user = self.request.user
@@ -122,10 +120,12 @@ class ActivateAccountView(View):
 class UserLoginView(View):
     http_method_names = ["get","post"]
 
+
     def get(self,request):
         return render(request,"account/signin.html")
 
     def post(self,request):
+
         email = self.request.POST.get("email")
         password = self.request.POST.get("password")
         user = authenticate(email=email, password=password)

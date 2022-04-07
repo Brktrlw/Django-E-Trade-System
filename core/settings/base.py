@@ -13,7 +13,6 @@ SECRET_KEY = env("SECRET_KEY")
 
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -32,6 +31,10 @@ INSTALLED_APPS = [
     'django_cleanup',
     'admin_honeypot',
     'rosetta',
+    'parler',
+    "admin_interface",
+    "colorfield",
+    'django.contrib.admin',
 
 ]
 
@@ -44,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ratelimit.middleware.RatelimitMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -112,3 +116,4 @@ LOGIN_URL = "/user/login/"
 LOCALE_PATHS = [
     BASE_DIR / 'locale/',
 ]
+

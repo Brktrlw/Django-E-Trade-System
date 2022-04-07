@@ -1,0 +1,7 @@
+
+core/settings/.env
+*.sqlite3
+*.pyc
+*.jpeg
+/env
+.idea
