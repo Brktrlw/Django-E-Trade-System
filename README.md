@@ -47,7 +47,7 @@ You can access many modules on an e-commerce site. It is an e-commerce system de
 Install this project with git clone.
 
 ```bash
-  git clone https://github.com/Brktrlw/django-e-commerce
+  https://github.com/Brktrlw/Django-E-Trade-System
   cd django-e-commerce
 ```
 
